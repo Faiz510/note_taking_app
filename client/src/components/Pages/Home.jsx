@@ -1,7 +1,16 @@
 import React from "react";
+import SidebarProject from "../layout/SidebarProject";
+import AddProjectSection from "../layout/AddProjectSection";
+import CreateNoteSections from "../layout/CreateNoteSections";
 
 const Home = () => {
-  return <div>Home</div>;
+  return (
+    <main className="flex">
+      <SidebarProject />
+      <CreateNoteSections />
+      {/* <AddProjectSection /> */}
+    </main>
+  );
 };
 
 export default Home;
