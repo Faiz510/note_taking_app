@@ -1,133 +1,67 @@
 import Note from "../modal/NoteModal.js";
+import catchAsync from "../utilis/CatchAsync.js";
+import AppError from "../utilis/AppError.js";
 
-export const AllNotes = async (req, res) => {
-  try {
-    const notes = await Note.find();
+export const AllNotes = catchAsync(async (req, res, next) => {
+  const notes = await Note.find();
 
-    res.status(200).json({
-      status: "sucess",
-      notesNum: notes.length,
-      notes,
-    });
-  } catch (error) {
-    res.status(400).json({
-      status: "fail",
-      message: `errror in post:  ${error}`,
-    });
-  }
-};
+  res.status(200).json({
+    status: "sucess",
+    notesNum: notes.length,
+    notes,
+  });
+});
 
-export const deleteNote = async (req, res) => {
-  try {
-    const { id } = req.params;
+export const deleteNote = catchAsync(async (req, res, next) => {
+  const notes = await Note.findByIdAndDelete(req.params.id);
 
-    if (!id) {
-      return res.status(400).json({
-        status: "fail",
-        message: `not user found with id `,
-      });
-    }
+  if (!notes) return next(new AppError(400, "cant found note with this id "));
 
-    const notes = await Note.findByIdAndDelete(id);
+  res.status(200).json({
+    status: "sucess",
+    deletedNote: null,
+  });
+});
 
-    res.status(200).json({
-      status: "sucess",
-      deletedNote: null,
-    });
-  } catch (error) {
-    res.status(400).json({
-      status: "fail",
-      message: `errror in post:  ${error}`,
-    });
-  }
-};
+export const noteById = catchAsync(async (req, res, next) => {
+  const notes = await Note.findById(req.params.id);
 
-export const noteById = async (req, res) => {
-  try {
-    const { id } = req.params;
+  if (!notes) return next(new AppError(400, "note not found with this id"));
 
-    if (!id) {
-      return res.status(400).json({
-        status: "fail",
-        message: `not user found with id `,
-      });
-    }
+  res.status(200).json({
+    status: "sucess",
+    notes,
+  });
+});
 
-    const notes = await Note.findById(id);
+export const updateNote = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
 
-    res.status(200).json({
-      status: "sucess",
-      notes,
-    });
-  } catch (error) {
-    res.status(400).json({
-      status: "fail",
-      message: `errror in post:  ${error}`,
-    });
-  }
-};
+  const { title, note } = req.body;
 
-export const updateNote = async (req, res) => {
-  try {
-    const { id } = req.params;
+  const newBody = {
+    title,
+    note,
+  };
 
-    if (!id) {
-      return res.status(400).json({
-        status: "fail",
-        message: `not user found with id `,
-      });
-    }
+  const notes = await Note.findByIdAndUpdate(id, newBody, {
+    new: true,
+    runValidators: true,
+  });
 
-    const { title, note } = req.body;
+  if (!notes) return next(new AppError(400, "note cant found with this id"));
 
-    const newBody = {
-      title,
-      note,
-    };
+  res.status(200).json({
+    status: "sucess",
+    notes,
+  });
+});
 
-    const notes = await Note.findByIdAndUpdate(id, newBody, {
-      new: true,
-      runValidators: true,
-    });
+export const createNote = catchAsync(async (req, res, next) => {
+  const notes = await Note.create(req.body);
 
-    res.status(200).json({
-      status: "sucess",
-      notes,
-    });
-  } catch (error) {
-    res.status(400).json({
-      status: "fail",
-      message: `errror in post:  ${error}`,
-    });
-  }
-};
-
-export const createNote = async (req, res) => {
-  try {
-    const { title, note } = req.body;
-
-    if (!title || !note) {
-      return res.status(400).json({
-        status: "fail",
-        message: "all fields are required",
-      });
-    }
-
-    const newBody = {
-      title,
-      note,
-    };
-
-    const notes = await Note.create(newBody);
-
-    res.status(200).json({
-      status: "sucess",
-      notes,
-    });
-  } catch (error) {
-    res.status(400).json({
-      status: "fail",
-      message: `errror in post:  ${error}`,
-    });
-  }
-};
+  res.status(200).json({
+    status: "sucess",
+    notes,
+  });
+});
