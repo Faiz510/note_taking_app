@@ -16,10 +16,11 @@ app.use(morgan("tiny"));
 ///////////////////
 app.use("/api/v1/note", NoteRouter);
 
-app.all("*", (req, res, next) => {
-  next(new AppError(400, `can't found the route ${req.originalUrl}`));
-});
-
+//////////////////
+app.all("*", (req, res, next) =>
+  next(new AppError(400, `can't found the route ${req.originalUrl}`))
+);
 app.use(globalErrorHandler);
+///////
 
 export default app;
