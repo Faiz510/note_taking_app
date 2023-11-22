@@ -4,8 +4,8 @@ export const globalErrorHandler = (err, req, res, next) => {
 
   res.status(err.statusCode).json({
     status: err.status,
-    // Error: err,
+    Error: err,
     message: err.message,
-    // stack: err.stack,
+    stack: err.stack,
   });
 };
