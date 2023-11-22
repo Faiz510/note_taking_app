@@ -33,8 +33,6 @@ export const login = catchAsync(async (req, res, next) => {
     );
 
   // send jwt token response
-
-  //   console.log(user);
   const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
     expiresIn: "7d",
   });
@@ -44,4 +42,29 @@ export const login = catchAsync(async (req, res, next) => {
     token,
     message: `token has send to ${user.username}`,
   });
+});
+
+export const protect = catchAsync(async (req, res, next) => {
+  let token;
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer")
+  ) {
+    token = req.headers.authorization.split(" ")[1];
+  }
+
+  if (!token) {
+    return next(new AppError(400, "your are not logged in or invalid token"));
+  }
+
+  const decoded = await jwt.verify(token, process.env.JWT_SECRET);
+
+  const currentUser = await User.findOne({ userId: decoded.id });
+
+  if (!currentUser) return next(new AppError(400, "invalid token"));
+
+  req.user = currentUser;
+
+  next();
+  //   console.log(token);
 });
