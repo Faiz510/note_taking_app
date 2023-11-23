@@ -35,6 +35,8 @@ const userSchema = new mongoose.Schema(
         message: "Passwords do not match",
       },
     },
+
+    notes: [{ title: { type: String, unique: true }, note: { type: String } }],
   },
   {
     timestamps: true,
@@ -42,12 +44,10 @@ const userSchema = new mongoose.Schema(
 );
 
 userSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) return next();
   const hashed = bcryptjs.hash(this.password, 12);
-
   this.password = await hashed;
-
   this.passwordConfirm = undefined;
-
   next();
 });
 

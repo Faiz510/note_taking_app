@@ -46,6 +46,7 @@ export const login = catchAsync(async (req, res, next) => {
 
 export const protect = catchAsync(async (req, res, next) => {
   let token;
+
   if (
     req.headers.authorization &&
     req.headers.authorization.startsWith("Bearer")
@@ -53,18 +54,19 @@ export const protect = catchAsync(async (req, res, next) => {
     token = req.headers.authorization.split(" ")[1];
   }
 
-  if (!token) {
+  if (!token)
     return next(new AppError(400, "your are not logged in or invalid token"));
-  }
 
   const decoded = await jwt.verify(token, process.env.JWT_SECRET);
 
-  const currentUser = await User.findOne({ userId: decoded.id });
+  // console.log(decoded);
+
+  const currentUser = await User.findById(decoded.userId);
 
   if (!currentUser) return next(new AppError(400, "invalid token"));
 
   req.user = currentUser;
+  // console.log(req.user.username);
 
   next();
-  //   console.log(token);
 });
