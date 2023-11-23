@@ -1,20 +1,38 @@
 import { useState } from "react";
 import FormSectionLayout from "../layout/FormSectionLayout";
 import SignFormInputGroup from "../layout/SignFormInputGroup";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const inputStyleClasses =
   "w-[100%] bg-white focus:outline-none px-2 py-1 rounded-md";
 
 const Signup = () => {
   const [signupformData, setSignupFormData] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [dataError, setDataError] = useState("");
+  const navigate = useNavigate();
 
   const onValuesHandler = (e) => {
     setSignupFormData({ ...signupformData, [e.target.id]: e.target.value });
   };
 
-  const onSubmitSignFormHandler = (e) => {
+  const onSubmitSignFormHandler = async (e) => {
     e.preventDefault();
-    console.log(signupformData);
+
+    try {
+      setLoading(true);
+      await axios.post(
+        "http://localhost:3000/api/v1/user/signup",
+        signupformData
+      );
+
+      setLoading(false);
+      navigate("/signin");
+    } catch (error) {
+      setDataError(error.response.data.message);
+      setLoading(false);
+    }
   };
 
   return (
@@ -65,6 +83,9 @@ const Signup = () => {
         >
           Submit
         </button>
+        <p className="text-red-700 font-semibold tracking-wider">
+          {dataError}{" "}
+        </p>
       </form>
     </FormSectionLayout>
   );
