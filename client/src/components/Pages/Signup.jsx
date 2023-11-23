@@ -2,7 +2,9 @@ import { useState } from "react";
 import FormSectionLayout from "../layout/FormSectionLayout";
 import SignFormInputGroup from "../layout/SignFormInputGroup";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import SignConnector from "../layout/SignConnector";
+import ErrorBox from "../layout/ErrorBox";
 
 const inputStyleClasses =
   "w-[100%] bg-white focus:outline-none px-2 py-1 rounded-md";
@@ -83,9 +85,14 @@ const Signup = () => {
         >
           Submit
         </button>
-        <p className="text-red-700 font-semibold tracking-wider">
-          {dataError}{" "}
-        </p>
+
+        <SignConnector
+          label={"Sign in"}
+          text={"If you already have account ?"}
+          link={"/signin"}
+        />
+
+        <ErrorBox error={dataError} />
       </form>
     </FormSectionLayout>
   );

@@ -40,7 +40,7 @@ export const login = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: "sucess",
     token,
-    message: `token has send to ${user.username}`,
+    user,
   });
 });
 

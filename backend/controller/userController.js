@@ -2,10 +2,6 @@ import User from "../modal/UserModal.js";
 import catchAsync from "../utilis/CatchAsync.js";
 import AppError from "../utilis/AppError.js";
 
-//   const user = await User.findById(req.user._id);
-
-//   if (!user) return next(new AppError(400, "user not found with this id "));
-
 export const createUserNote = catchAsync(async (req, res, next) => {
   const { enteredTitle, enteredNote } = req.body;
 
