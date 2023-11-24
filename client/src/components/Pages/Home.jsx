@@ -2,18 +2,18 @@ import React, { useState } from "react";
 import SidebarProject from "../layout/SidebarProject";
 import AddProjectSection from "../layout/AddProjectSection";
 import CreateNoteSections from "../layout/CreateNoteSections";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
   const [showAddNotes, setShowAddNotes] = useState(false);
-  const [notes, setNotes] = useState({
-    user: {
-      notes: [],
-    },
-  });
-
-  const addNotesHandler = () => {
-    setShowAddNotes(() => !showAddNotes);
-  };
+  const navigate = useNavigate();
+  // show notes edit page
+  const addNotesHandler = () => setShowAddNotes(() => !showAddNotes);
+  // current state
+  const currentUser = useSelector((state) => state.user.user.currentUser);
+  // if user is not logout
+  if (!currentUser) return navigate("/welcome");
 
   return (
     <main className="flex">

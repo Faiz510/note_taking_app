@@ -5,12 +5,13 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import SignConnector from "../layout/SignConnector";
 import ErrorBox from "../layout/ErrorBox";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
   sessionStart,
   sessionSucess,
   sessionFail,
 } from "../../store/UserSlice.js";
+import SubmitButton from "../layout/SubmitButton.jsx";
 
 const inputStyleClasses =
   "w-[100%] bg-white focus:outline-none px-2 py-1 rounded-md";
@@ -75,12 +76,7 @@ const Sigin = () => {
           />
         </SignFormInputGroup>
 
-        <button
-          type="submit"
-          className="bg-white text-center w-full py-2 my-2 rounded-md"
-        >
-          Submit
-        </button>
+        <SubmitButton type={"submit"} text={"submit"} />
 
         <SignConnector
           label={"Sign Up"}
