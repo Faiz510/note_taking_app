@@ -22,9 +22,7 @@ export const userSlice = createSlice({
       state.currentUser = null;
       state.error = action.payload;
     },
-    sessionOut: () => {
-      initialState;
-    },
+    sessionOut: () => initialState,
   },
 });
 

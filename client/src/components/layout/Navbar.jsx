@@ -16,14 +16,9 @@ const Navbar = () => {
           <NavLink to={"/"}> Home </NavLink>
         </li>
         {currentUser ? (
-          <>
-            <li>
-              <NavLink to={"/signin"}> Signin </NavLink>
-            </li>
-            <li>
-              <NavLink to={"/profile"}> profile </NavLink>
-            </li>
-          </>
+          <li>
+            <NavLink to={"/profile"}> profile </NavLink>
+          </li>
         ) : (
           <li>
             <NavLink to={"/signup"}> Signup </NavLink>
