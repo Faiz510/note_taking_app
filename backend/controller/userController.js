@@ -23,3 +23,17 @@ export const createUserNote = catchAsync(async (req, res, next) => {
     user,
   });
 });
+
+export const deleteMe = catchAsync(async (req, res, next) => {
+  const user = await User.findByIdAndDelete(req.user.id);
+
+  if (!user)
+    return next(
+      new AppError(400, "user cant found with this id or user not login")
+    );
+
+  res.status(200).json({
+    status: "sucess",
+    user: null,
+  });
+});
