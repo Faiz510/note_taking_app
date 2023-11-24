@@ -37,3 +37,28 @@ export const deleteMe = catchAsync(async (req, res, next) => {
     user: null,
   });
 });
+
+export const updateMe = catchAsync(async (req, res, next) => {
+  const { username, email, token } = req.body;
+
+  const newBody = {
+    username,
+    email,
+  };
+
+  const user = await User.findByIdAndUpdate(req.user.id, newBody, {
+    new: true,
+    runValidators: true,
+  });
+
+  if (!user)
+    return next(
+      new AppError(400, "user not found with this id or You are not login")
+    );
+
+  res.status(200).json({
+    status: "sucess",
+    token,
+    user,
+  });
+});

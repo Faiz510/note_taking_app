@@ -66,7 +66,7 @@ export const protect = catchAsync(async (req, res, next) => {
   if (!currentUser) return next(new AppError(400, "invalid token"));
 
   req.user = currentUser;
-  // console.log(req.user.username);
+  // console.log(req.user);
 
   next();
 });

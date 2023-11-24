@@ -6,6 +6,7 @@ import Home from "./components/Pages/Home";
 import Navbar from "./components/layout/Navbar";
 import Signup from "./components/Pages/Signup";
 import Profile from "./components/Pages/Profile";
+import PrivateLayout from "./components/layout/PrivateLayout";
 
 const App = () => {
   return (
@@ -13,12 +14,14 @@ const App = () => {
       <Navbar />
       <Routes>
         <Route path="/">
-          <Route path="" element={<Home />}></Route>
-          {/* <Route path="/welcome" element={<Welcome />}></Route> */}
-          <Route path="/signin" element={<Sigin />}></Route>
-          <Route path="/signup" element={<Signup />}></Route>
-          <Route path="/signout" element={<Signout />}></Route>
-          <Route path="/profile" element={<Profile />}></Route>
+          <Route path="" element={<Home />} />
+          {/* <Route path="/welcome" element={<Welcome />} /> */}
+          <Route path="/signin" element={<Sigin />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/signout" element={<Signout />} />
+          <Route element={<PrivateLayout />}>
+            <Route path="/profile" element={<Profile />} />
+          </Route>
         </Route>
       </Routes>
     </BrowserRouter>
