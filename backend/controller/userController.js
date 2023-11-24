@@ -3,7 +3,18 @@ import catchAsync from "../utilis/CatchAsync.js";
 import AppError from "../utilis/AppError.js";
 
 export const createUserNote = catchAsync(async (req, res, next) => {
-  const { enteredTitle, enteredNote } = req.body;
+  const { enteredTitle, enteredNote, token } = req.body;
+
+  if (
+    !enteredTitle || // Check if enteredTitle is undefined or falsy
+    !enteredNote || // Check if enteredNote is undefined or falsy
+    enteredTitle.trim().length === 0 ||
+    enteredNote.trim().length === 0
+  ) {
+    return next(
+      new AppError(400, "fields are required and Fields cannot be empty")
+    );
+  }
 
   const noteBody = {
     title: enteredTitle,
@@ -20,6 +31,7 @@ export const createUserNote = catchAsync(async (req, res, next) => {
 
   res.status(200).json({
     status: "sucess",
+    token,
     user,
   });
 });
