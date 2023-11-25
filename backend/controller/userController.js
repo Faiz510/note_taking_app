@@ -74,3 +74,74 @@ export const updateMe = catchAsync(async (req, res, next) => {
     user,
   });
 });
+
+export const getAlluserNotes = catchAsync(async (req, res, next) => {
+  const user = await User.findById(req.user.id);
+
+  const note = user.notes;
+
+  res.status(200).json({
+    status: "sucess",
+    note,
+  });
+});
+
+export const GetNoteById = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
+  const user = await User.findById(req.user.id);
+  if (!user) return next(new AppError(400, "user cannot found"));
+
+  const note = user.notes.find((note) => note._id.toString() === id.toString());
+  if (!note) return next(new AppError(400, "note cannot found"));
+
+  res.status(200).json({
+    status: "sucess",
+    note,
+  });
+});
+
+export const deleteNoteById = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
+  const { token } = req.body;
+  const user = await User.findById(req.user.id);
+  if (!user) return next(new AppError(400, "user cannot found"));
+
+  const noteIndex = user.notes.findIndex(
+    (note) => note._id.toString() === id.toString()
+  );
+  if (noteIndex === -1) return next(new AppError(400, "note cannot found"));
+
+  user.notes.splice(noteIndex, 1);
+
+  await user.save({ validateBeforeSave: false });
+
+  res.status(200).json({
+    status: "sucess",
+    token,
+    user,
+  });
+});
+
+export const updateNote = catchAsync(async (req, res, next) => {
+  const { enteredTitle, enteredNote, token } = req.body;
+
+  const { id } = req.params;
+
+  const user = await User.findById(req.user.id);
+
+  if (!user) return next(new AppError(400, "user cannot found"));
+
+  const note = user.notes.find((note) => note._id.toString() === id.toString());
+
+  if (!note) return next(new AppError(400, "note cannot found"));
+
+  (note.title = enteredTitle), (note.note = enteredNote);
+
+  await user.save({ validateBeforeSave: false });
+
+  res.status(200).json({
+    status: "sucess",
+    token,
+    note,
+  });
+});

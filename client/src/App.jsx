@@ -7,6 +7,7 @@ import Navbar from "./components/layout/Navbar";
 import Signup from "./components/Pages/Signup";
 import Profile from "./components/Pages/Profile";
 import PrivateLayout from "./components/layout/PrivateLayout";
+import Note from "./components/Pages/Note";
 
 const App = () => {
   return (
@@ -21,6 +22,7 @@ const App = () => {
           <Route path="/signout" element={<Signout />} />
           <Route element={<PrivateLayout />}>
             <Route path="/profile" element={<Profile />} />
+            <Route path="note/:id" element={<Note />} />
           </Route>
         </Route>
       </Routes>

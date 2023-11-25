@@ -6,7 +6,6 @@ import ErrorBox from "./ErrorBox";
 
 const Input = ({ showAddNotes }) => {
   const [noteData, setNoteData] = useState({});
-  // const [loading , setLoading] = useState(false)
   const [formError, setFormError] = useState("");
   /////////////////
   const dispatch = useDispatch();
@@ -28,16 +27,10 @@ const Input = ({ showAddNotes }) => {
           },
         }
       );
-
       const { data } = res;
-
-      console.log(data);
-
       dispatch(sessionSucess(data));
     } catch (error) {
       setFormError(error.response.data.message);
-      console.log(formError);
-      console.error(error);
     }
   };
   return (
