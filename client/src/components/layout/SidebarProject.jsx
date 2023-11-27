@@ -15,14 +15,15 @@ const SidebarProject = ({ showAddNotes }) => {
   const displayNoteData = async () => {
     try {
       setLoading(true);
-      const res = await axios.get(`http://localhost:3000/api/v1/user/notes`, {
+      const res = await axios.get(`http://localhost:3000/api/v1/note`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
 
       const { data } = res;
-      setNoteData(data.note);
+      // console.log(data);
+      setNoteData(data.notes);
       setLoading(false);
     } catch (error) {
       setErrorData(error.response.data.message);
@@ -51,7 +52,7 @@ const SidebarProject = ({ showAddNotes }) => {
       <ul>
         {!loading
           ? NoteData?.map((note) => (
-              <Link to={`/note/${note?._id}`} className="" key={note?._id}>
+              <Link to={`note/${note?._id}`} className="" key={note?._id}>
                 <li className="my-2 bg-white px-2 w-[60%] mx-auto">
                   {note?.title}
                 </li>

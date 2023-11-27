@@ -3,21 +3,10 @@ import catchAsync from "../utilis/CatchAsync.js";
 import AppError from "../utilis/AppError.js";
 import User from "../modal/UserModal.js";
 
-export const deleteNote = catchAsync(async (req, res, next) => {
-  const notes = await Note.findByIdAndDelete(req.params.id);
-
-  if (!notes) return next(new AppError(400, "cant found note with this id "));
-
-  res.status(200).json({
-    status: "sucess",
-    deletedNote: null,
-  });
-});
-
 export const updateNote = catchAsync(async (req, res, next) => {
   const { id } = req.params;
-
   const { title, note } = req.body;
+  const { token } = req.body;
 
   const newBody = {
     title,
@@ -33,6 +22,7 @@ export const updateNote = catchAsync(async (req, res, next) => {
 
   res.status(200).json({
     status: "sucess",
+    token,
     notes,
   });
 });
@@ -92,5 +82,23 @@ export const noteById = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: "sucess",
     notes,
+  });
+});
+
+export const deleteNote = catchAsync(async (req, res, next) => {
+  const { token } = req.body;
+  const user = await User.findById(req.user.id);
+  if (!user)
+    return next(
+      new AppError(200, "A user id is required or user is not logged in")
+    );
+  const notes = await Note.findByIdAndDelete(req.params.id);
+
+  if (!notes) return next(new AppError(400, "cant found note with this id "));
+
+  res.status(200).json({
+    status: "sucess",
+    token,
+    user,
   });
 });

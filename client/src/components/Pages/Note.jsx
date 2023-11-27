@@ -22,18 +22,14 @@ const Note = () => {
   const displayNoteData = async () => {
     try {
       setLoading(true);
-      const res = await axios.get(
-        `http://localhost:3000/api/v1/user/note/${id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
+      const res = await axios.get(`http://localhost:3000/api/v1/note/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       const { data } = res;
       setLoading(false);
-      setNoteData(data.note);
+      setNoteData(data.notes);
     } catch (error) {
       setErrorData(error.response.data.message);
       setLoading(false);
@@ -70,7 +66,7 @@ const Note = () => {
 
     try {
       const res = await axios.put(
-        `http://localhost:3000/api/v1/user/note/${id}`,
+        `http://localhost:3000/api/v1/note/${id}`,
         updateData,
         {
           headers: {
@@ -84,7 +80,9 @@ const Note = () => {
 
       dispatch(sessionSucess(data));
     } catch (error) {
-      console.log(error);
+      // console.log(error);
+      // console.log();
+      setErrorData(error.response.data.message);
     }
   };
   return (
@@ -95,7 +93,7 @@ const Note = () => {
           className="bg-slate-200 w-[80%] focus:outline-none rounded-md py-1 px-2"
           placeholder="Title"
           defaultValue={NoteData?.title}
-          id="enteredTitle"
+          id="title"
           onChange={onUpdateVal}
           readOnly={isEditing ? false : true}
         />
@@ -104,7 +102,7 @@ const Note = () => {
           rows="12"
           // placeholder="Descrioption"
           className="bg-slate-200 w-[80%] h-28 focus:outline-none px-2 py-1"
-          id="enteredNote"
+          id="note"
           defaultValue={NoteData?.note}
           readOnly={isEditing ? false : true}
           onChange={onUpdateVal}
