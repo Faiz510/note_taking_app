@@ -36,10 +36,15 @@ const userSchema = new mongoose.Schema(
       },
     },
 
-    notes: [{ title: { type: String, unique: true }, note: { type: String } }],
+    // notes: [{ title: { type: String, unique: true }, note: { type: String } }],
+    notes: [{ type: mongoose.Schema.Types.ObjectId, ref: "Note" }],
   },
   {
     timestamps: true,
+  },
+  {
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
   }
 );
 

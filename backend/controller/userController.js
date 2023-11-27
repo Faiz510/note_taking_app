@@ -2,40 +2,6 @@ import User from "../modal/UserModal.js";
 import catchAsync from "../utilis/CatchAsync.js";
 import AppError from "../utilis/AppError.js";
 
-export const createUserNote = catchAsync(async (req, res, next) => {
-  const { enteredTitle, enteredNote, token } = req.body;
-
-  if (
-    !enteredTitle || // Check if enteredTitle is undefined or falsy
-    !enteredNote || // Check if enteredNote is undefined or falsy
-    enteredTitle.trim().length === 0 ||
-    enteredNote.trim().length === 0
-  ) {
-    return next(
-      new AppError(400, "fields are required and Fields cannot be empty")
-    );
-  }
-
-  const noteBody = {
-    title: enteredTitle,
-    note: enteredNote,
-  };
-
-  const user = await req.user;
-
-  if (!user) return next(400, "login in to add notes");
-
-  user.notes.push(noteBody);
-
-  await user.save({ validateBeforeSave: false });
-
-  res.status(200).json({
-    status: "sucess",
-    token,
-    user,
-  });
-});
-
 export const deleteMe = catchAsync(async (req, res, next) => {
   const user = await User.findByIdAndDelete(req.user.id);
 
@@ -75,73 +41,19 @@ export const updateMe = catchAsync(async (req, res, next) => {
   });
 });
 
-export const getAlluserNotes = catchAsync(async (req, res, next) => {
+export const AddNote = catchAsync(async (req, res, next) => {
+  const { noteId } = req.body;
+  if (!noteId) return next(new AppError(400, "A note id must required"));
+
   const user = await User.findById(req.user.id);
 
-  const note = user.notes;
+  if (!user) return next(new AppError(400, "A user must be logged in "));
 
-  res.status(200).json({
-    status: "sucess",
-    note,
-  });
-});
-
-export const GetNoteById = catchAsync(async (req, res, next) => {
-  const { id } = req.params;
-  const user = await User.findById(req.user.id);
-  if (!user) return next(new AppError(400, "user cannot found"));
-
-  const note = user.notes.find((note) => note._id.toString() === id.toString());
-  if (!note) return next(new AppError(400, "note cannot found"));
-
-  res.status(200).json({
-    status: "sucess",
-    note,
-  });
-});
-
-export const deleteNoteById = catchAsync(async (req, res, next) => {
-  const { id } = req.params;
-  const { token } = req.body;
-  const user = await User.findById(req.user.id);
-  if (!user) return next(new AppError(400, "user cannot found"));
-
-  const noteIndex = user.notes.findIndex(
-    (note) => note._id.toString() === id.toString()
-  );
-  if (noteIndex === -1) return next(new AppError(400, "note cannot found"));
-
-  user.notes.splice(noteIndex, 1);
-
+  user.notes.push(noteId);
   await user.save({ validateBeforeSave: false });
 
   res.status(200).json({
     status: "sucess",
-    token,
     user,
-  });
-});
-
-export const updateNote = catchAsync(async (req, res, next) => {
-  const { enteredTitle, enteredNote, token } = req.body;
-
-  const { id } = req.params;
-
-  const user = await User.findById(req.user.id);
-
-  if (!user) return next(new AppError(400, "user cannot found"));
-
-  const note = user.notes.find((note) => note._id.toString() === id.toString());
-
-  if (!note) return next(new AppError(400, "note cannot found"));
-
-  (note.title = enteredTitle), (note.note = enteredNote);
-
-  await user.save({ validateBeforeSave: false });
-
-  res.status(200).json({
-    status: "sucess",
-    token,
-    note,
   });
 });
