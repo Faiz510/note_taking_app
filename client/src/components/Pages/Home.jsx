@@ -9,6 +9,7 @@ const Home = () => {
   const [showAddNotes, setShowAddNotes] = useState(false);
   // show notes edit page
   const addNotesHandler = () => setShowAddNotes(() => !showAddNotes);
+
   // current state
   const currentUser = useSelector((state) => state.user.user.currentUser);
   // if user is not logout

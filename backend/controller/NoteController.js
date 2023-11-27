@@ -28,6 +28,7 @@ export const updateNote = catchAsync(async (req, res, next) => {
 });
 
 export const createNote = catchAsync(async (req, res, next) => {
+  const { token } = req.body;
   // validate fields
   const { title, note } = req.body;
   if (
@@ -55,6 +56,7 @@ export const createNote = catchAsync(async (req, res, next) => {
   ///////////////////////////
   res.status(200).json({
     status: "sucess",
+    token,
     user,
   });
 });
@@ -87,18 +89,30 @@ export const noteById = catchAsync(async (req, res, next) => {
 
 export const deleteNote = catchAsync(async (req, res, next) => {
   const { token } = req.body;
+  // user
   const user = await User.findById(req.user.id);
   if (!user)
     return next(
       new AppError(200, "A user id is required or user is not logged in")
     );
-  const notes = await Note.findByIdAndDelete(req.params.id);
 
+  // Usernote.pull
+
+  // notes del from notes modal
+  const notes = await Note.findByIdAndDelete(req.params.id);
   if (!notes) return next(new AppError(400, "cant found note with this id "));
+
+  // also remove from notes array
+
+  const userUpdate = await User.findByIdAndUpdate(
+    req.user._id,
+    { $pull: { notes: req.params.id } },
+    { new: true }
+  );
 
   res.status(200).json({
     status: "sucess",
     token,
-    user,
+    user: userUpdate,
   });
 });

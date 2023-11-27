@@ -42,7 +42,7 @@ const Sigin = () => {
 
       dispatch(sessionSucess(data));
 
-      console.log(data);
+      // console.log(data);
       setLoading(false);
       navigate("/");
     } catch (error) {

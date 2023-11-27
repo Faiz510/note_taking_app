@@ -36,25 +36,33 @@ const Note = () => {
     }
   };
 
+  const onDeleteNoteHandler = async () => {
+    try {
+      setLoading(true);
+      const res = await axios.delete(
+        `http://localhost:3000/api/v1/note/${id}`,
+        {
+          data: { token },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const { data } = res;
+      // console.log(data);
+      dispatch(sessionSucess(data));
+      setLoading(false);
+      navigate("/");
+    } catch (error) {
+      setErrorData(error.response.data.message);
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     displayNoteData();
   }, []);
-
-  const onDeleteNoteHandler = async () => {
-    const res = await axios.delete(
-      `http://localhost:3000/api/v1/user/note/${id}`,
-      {
-        data: { token },
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-
-    const { data } = res;
-    dispatch(sessionSucess(data));
-    navigate("/");
-  };
 
   const onUpdateVal = (e) => {
     setUpdateData({ ...updateData, [e.target.id]: e.target.value, token });
@@ -80,8 +88,6 @@ const Note = () => {
 
       dispatch(sessionSucess(data));
     } catch (error) {
-      // console.log(error);
-      // console.log();
       setErrorData(error.response.data.message);
     }
   };
