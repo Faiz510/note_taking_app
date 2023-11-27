@@ -14,6 +14,11 @@ const NoteSchema = new mongoose.Schema(
       type: String,
       required: [true, "A note is required"],
     },
+
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
   },
   {
     timestamps: true,
