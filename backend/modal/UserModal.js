@@ -56,6 +56,13 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
+userSchema.pre(/^find/, function () {
+  this.populate({
+    path: "notes",
+    select: "title",
+  });
+});
+
 userSchema.methods.correctPassword = async function (
   candidatePassword,
   userPassword

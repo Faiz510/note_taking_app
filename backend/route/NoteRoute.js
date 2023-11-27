@@ -10,7 +10,7 @@ import { protect } from "../controller/authController.js";
 
 const router = express.Router();
 
-router.route("/").post(createNote).get(protect, AllNotes);
+router.route("/").post(protect, createNote).get(protect, AllNotes);
 
 router.route("/:id").delete(deleteNote).get(noteById).put(updateNote);
 
