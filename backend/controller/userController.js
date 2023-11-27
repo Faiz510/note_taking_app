@@ -40,20 +40,3 @@ export const updateMe = catchAsync(async (req, res, next) => {
     user,
   });
 });
-
-export const AddNote = catchAsync(async (req, res, next) => {
-  const { noteId } = req.body;
-  if (!noteId) return next(new AppError(400, "A note id must required"));
-
-  const user = await User.findById(req.user.id);
-
-  if (!user) return next(new AppError(400, "A user must be logged in "));
-
-  user.notes.push(noteId);
-  await user.save({ validateBeforeSave: false });
-
-  res.status(200).json({
-    status: "sucess",
-    user,
-  });
-});
