@@ -20,10 +20,16 @@ export const updateNote = catchAsync(async (req, res, next) => {
 
   if (!notes) return next(new AppError(400, "note cant found with this id"));
 
+  const user = await User.findById(req.user.id);
+  if (!user)
+    return next(
+      new AppError(200, "A user id is required or user is not logged in")
+    );
+
   res.status(200).json({
     status: "sucess",
     token,
-    notes,
+    user,
   });
 });
 
@@ -103,7 +109,6 @@ export const deleteNote = catchAsync(async (req, res, next) => {
   if (!notes) return next(new AppError(400, "cant found note with this id "));
 
   // also remove from notes array
-
   const userUpdate = await User.findByIdAndUpdate(
     req.user._id,
     { $pull: { notes: req.params.id } },

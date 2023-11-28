@@ -19,23 +19,6 @@ const Note = () => {
 
   const { user, token } = useSelector((state) => state.user?.user?.currentUser);
 
-  const displayNoteData = async () => {
-    try {
-      setLoading(true);
-      const res = await axios.get(`http://localhost:3000/api/v1/note/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const { data } = res;
-      setLoading(false);
-      setNoteData(data.notes);
-    } catch (error) {
-      setErrorData(error.response.data.message);
-      setLoading(false);
-    }
-  };
-
   const onDeleteNoteHandler = async () => {
     try {
       setLoading(true);
@@ -60,6 +43,23 @@ const Note = () => {
     }
   };
 
+  const displayNoteData = async () => {
+    try {
+      setLoading(true);
+      const res = await axios.get(`http://localhost:3000/api/v1/note/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const { data } = res;
+      setLoading(false);
+      setNoteData(data.notes);
+    } catch (error) {
+      setErrorData(error.response.data.message);
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     displayNoteData();
   }, []);
@@ -70,7 +70,8 @@ const Note = () => {
 
   const onUpdateNoteHandler = async () => {
     setIsEditing(() => !isEditing);
-    console.log(updateData);
+
+    if (Object.keys(updateData).length === 0) return;
 
     try {
       const res = await axios.put(
@@ -84,8 +85,6 @@ const Note = () => {
       );
 
       const { data } = res;
-      console.log(data);
-
       dispatch(sessionSucess(data));
     } catch (error) {
       setErrorData(error.response.data.message);

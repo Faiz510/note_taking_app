@@ -52,7 +52,7 @@ const SidebarProject = ({ showAddNotes }) => {
       {/* getting notes title lisst from state  */}
       <ul>
         {!loading
-          ? user.notes?.map((note) => (
+          ? user?.notes?.map((note) => (
               <Link to={`note/${note?._id}`} className="" key={note?._id}>
                 <li className="my-2 bg-white px-2 w-[60%] mx-auto">
                   {note?.title}
