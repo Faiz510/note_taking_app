@@ -1,6 +1,7 @@
 import User from "../modal/UserModal.js";
 import catchAsync from "../utilis/CatchAsync.js";
 import AppError from "../utilis/AppError.js";
+import sendSucessResponse from "../utilis/SendResponse.js";
 
 export const deleteMe = catchAsync(async (req, res, next) => {
   const user = await User.findByIdAndDelete(req.user.id);
@@ -10,10 +11,8 @@ export const deleteMe = catchAsync(async (req, res, next) => {
       new AppError(400, "user cant found with this id or user not login")
     );
 
-  res.status(200).json({
-    status: "sucess",
-    user: null,
-  });
+  // sending response
+  await sendSucessResponse(res);
 });
 
 export const updateMe = catchAsync(async (req, res, next) => {
@@ -34,9 +33,6 @@ export const updateMe = catchAsync(async (req, res, next) => {
       new AppError(400, "user not found with this id or You are not login")
     );
 
-  res.status(200).json({
-    status: "sucess",
-    token,
-    user,
-  });
+  // sending response
+  await sendSucessResponse(res, user, token);
 });

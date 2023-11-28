@@ -2,6 +2,7 @@ import Note from "../modal/NoteModal.js";
 import catchAsync from "../utilis/CatchAsync.js";
 import AppError from "../utilis/AppError.js";
 import User from "../modal/UserModal.js";
+import sendSucessResponse from "../utilis/SendResponse.js";
 
 export const updateNote = catchAsync(async (req, res, next) => {
   const { id } = req.params;
@@ -26,11 +27,8 @@ export const updateNote = catchAsync(async (req, res, next) => {
       new AppError(200, "A user id is required or user is not logged in")
     );
 
-  res.status(200).json({
-    status: "sucess",
-    token,
-    user,
-  });
+  // sending response
+  await sendSucessResponse(res, user, token);
 });
 
 export const createNote = catchAsync(async (req, res, next) => {
@@ -60,11 +58,8 @@ export const createNote = catchAsync(async (req, res, next) => {
   user.notes.push(UserNote);
   await user.save({ validateBeforeSave: false });
   ///////////////////////////
-  res.status(200).json({
-    status: "sucess",
-    token,
-    user,
-  });
+  // sending response
+  await sendSucessResponse(res, user, token);
 });
 
 export const AllNotes = catchAsync(async (req, res, next) => {
