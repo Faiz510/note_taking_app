@@ -1,4 +1,3 @@
-import React from "react";
 import NotesImg from "../../assets/createNote.jpg";
 
 const AddProjectSection = ({ showAddNotes }) => {
@@ -14,8 +13,7 @@ const AddProjectSection = ({ showAddNotes }) => {
           className="bg-slate-600 w-40 text-white px-4 mx-auto py-1 border-none font-medium mt-4"
           onClick={showAddNotes}
         >
-          {" "}
-          Create Note{" "}
+          Create Note
         </button>
       </div>
     </section>

@@ -1,5 +1,3 @@
-import React from "react";
-
 const FormSectionLayout = ({ label, children, ...props }) => {
   return (
     <section className="flex justify-center items-center flex-col" {...props}>

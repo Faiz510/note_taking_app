@@ -5,6 +5,7 @@ import ErrorBox from "../layout/ErrorBox";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import { sessionSucess } from "../../store/UserSlice";
+import useFetchResponse from "../../Hooks/useFetchResponse";
 
 const Note = () => {
   const [isEditing, setIsEditing] = useState(false);
@@ -17,7 +18,15 @@ const Note = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  // console.log(response);
+
   const { user, token } = useSelector((state) => state.user?.user?.currentUser);
+
+  const { response } = useFetchResponse(
+    "get",
+    `http://localhost:3000/api/v1/note/${id}`,
+    token
+  );
 
   const onDeleteNoteHandler = async () => {
     try {
@@ -43,27 +52,7 @@ const Note = () => {
     }
   };
 
-  const displayNoteData = async () => {
-    try {
-      setLoading(true);
-      const res = await axios.get(`http://localhost:3000/api/v1/note/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const { data } = res;
-      setLoading(false);
-      setNoteData(data.notes);
-    } catch (error) {
-      setErrorData(error.response.data.message);
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    displayNoteData();
-  }, []);
-
+  // update function
   const onUpdateVal = (e) => {
     setUpdateData({ ...updateData, [e.target.id]: e.target.value, token });
   };
@@ -90,6 +79,7 @@ const Note = () => {
       setErrorData(error.response.data.message);
     }
   };
+
   return (
     <FormSectionLayout label={"Note Page"}>
       <form className="flex justify-center items-center h-64 flex-col gap-4 w-[80%] md:w-[90%]">
@@ -97,7 +87,7 @@ const Note = () => {
           type="text"
           className="bg-slate-200 w-[80%] focus:outline-none rounded-md py-1 px-2"
           placeholder="Title"
-          defaultValue={NoteData?.title}
+          defaultValue={response?.notes?.title}
           id="title"
           onChange={onUpdateVal}
           readOnly={isEditing ? false : true}
@@ -108,7 +98,7 @@ const Note = () => {
           // placeholder="Descrioption"
           className="bg-slate-200 w-[80%] h-28 focus:outline-none px-2 py-1"
           id="note"
-          defaultValue={NoteData?.note}
+          defaultValue={response?.notes?.note}
           readOnly={isEditing ? false : true}
           onChange={onUpdateVal}
         ></textarea>

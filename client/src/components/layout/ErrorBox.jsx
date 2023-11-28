@@ -1,5 +1,3 @@
-import React from "react";
-
 const ErrorBox = ({ error }) => {
   return (
     <div className="text-center w-[80vw] md:w-[40vw]">

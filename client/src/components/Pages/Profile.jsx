@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { sessionOut, sessionSucess } from "../../store/UserSlice";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import useFetchResponse from "../../Hooks/useFetchResponse";
 
 const inputStyleClasses =
   "w-[100%] bg-white focus:outline-none px-2 py-1 rounded-md";
@@ -28,6 +29,7 @@ const Profile = () => {
   const onDeleteAccountHandler = async () => {
     try {
       await axios.delete("http://localhost:3000/api/v1/user/deleteMe", {
+        data: token,
         headers: {
           Authorization: `Bearer ${token}`,
         },

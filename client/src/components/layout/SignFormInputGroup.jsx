@@ -1,5 +1,3 @@
-import React from "react";
-
 const SignFormInputGroup = ({ label, children, ...props }) => {
   return (
     <div

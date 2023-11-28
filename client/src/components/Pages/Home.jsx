@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import SidebarProject from "../layout/SidebarProject";
 import AddProjectSection from "../layout/AddProjectSection";
 import CreateNoteSections from "../layout/CreateNoteSections";
@@ -13,7 +13,6 @@ const Home = () => {
   // current state
   const currentUser = useSelector((state) => state.user.user.currentUser);
   // if user is not logout
-
   return (
     <>
       {!currentUser ? (

@@ -1,4 +1,3 @@
-import React from "react";
 import NotesImg from "../../assets/createNote.jpg";
 import Input from "./Input";
 const CreateNoteSections = ({ showAddNotes }) => {
