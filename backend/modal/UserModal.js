@@ -38,6 +38,8 @@ const userSchema = new mongoose.Schema(
 
     // notes: [{ title: { type: String, unique: true }, note: { type: String } }],
     notes: [{ type: mongoose.Schema.Types.ObjectId, ref: "Note" }],
+
+    categories: [{ type: mongoose.Schema.Types.ObjectId, ref: "Category" }],
   },
   {
     timestamps: true,

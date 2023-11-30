@@ -1,6 +1,5 @@
 import User from "../modal/UserModal.js";
 import catchAsync from "../utilis/CatchAsync.js";
-import AppError from "../utilis/AppError.js";
 import sendSucessResponse from "../utilis/SendResponse.js";
 import ErrorHandlerFunction from "../utilis/ErrorHandlerFunction.js";
 
