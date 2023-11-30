@@ -37,7 +37,7 @@ const userSchema = new mongoose.Schema(
     },
 
     // notes: [{ title: { type: String, unique: true }, note: { type: String } }],
-    notes: [{ type: mongoose.Schema.Types.ObjectId, ref: "Note" }],
+    // notes: [{ type: mongoose.Schema.Types.ObjectId, ref: "Note" }],
 
     categories: [{ type: mongoose.Schema.Types.ObjectId, ref: "Category" }],
   },
@@ -60,12 +60,16 @@ userSchema.pre("save", async function (next) {
 
 userSchema.pre(/^find/, function () {
   this.populate({
-    path: "notes",
-    select: "title",
-  }).populate({
     path: "categories",
     select: "categoryName",
   });
+  // this.populate({
+  //   path: "notes",
+  //   select: "title",
+  // }).populate({
+  //   path: "categories",
+  //   select: "categoryName",
+  // });
 });
 
 userSchema.methods.correctPassword = async function (
