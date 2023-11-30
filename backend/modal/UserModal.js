@@ -62,6 +62,9 @@ userSchema.pre(/^find/, function () {
   this.populate({
     path: "notes",
     select: "title",
+  }).populate({
+    path: "categories",
+    select: "categoryName",
   });
 });
 

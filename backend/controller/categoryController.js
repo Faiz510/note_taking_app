@@ -25,3 +25,15 @@ export const createCategory = catchAsync(async (req, res, next) => {
   //   send response
   sendSucessResponse(res, user, token);
 });
+
+export const getAllCategory = catchAsync(async (req, res, next) => {
+  const user = await User.findById(req.user.id);
+
+  const category = await user.categories;
+
+  res.status(200).json({
+    status: "sucess",
+    categoryNum: category.length,
+    category,
+  });
+});
