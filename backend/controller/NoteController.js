@@ -51,6 +51,7 @@ export const createNote = catchAsync(async (req, res, next) => {
   };
   // create note
   const UserNote = await Note.create(newNote);
+  // await UserNote.save({ validateBeforeSave: false });
   // geting user functionality
   const user = await User.findById(req.user.id);
   ErrorHandlerFunction(
