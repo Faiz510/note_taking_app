@@ -4,6 +4,56 @@ import AppError from "../utilis/AppError.js";
 import User from "../modal/UserModal.js";
 import sendSucessResponse from "../utilis/SendResponse.js";
 import ErrorHandlerFunction from "../utilis/ErrorHandlerFunction.js";
+import Category from "../modal/CategoryModal.js";
+
+export const createNote = catchAsync(async (req, res, next) => {
+  // validate fields
+  const { title, note, token, category } = req.body;
+  if (
+    !title ||
+    !note ||
+    title.trim().length === 0 ||
+    note.trim().length === 0
+  ) {
+    return next(new AppError(400, "enter all fields"));
+  }
+  if (!category || category.trim().length === 0)
+    return next(new AppError(400, "category not added"));
+  const newNote = {
+    title,
+    note,
+  };
+  /////////////////////
+  // create note
+  const UserNote = await Note.create(newNote);
+
+  // getting category id
+  const UserCategory = await Category.findById(category);
+  ErrorHandlerFunction(
+    UserCategory,
+    next,
+    400,
+    "cannot find category with with this id"
+  );
+
+  // pushing notes in categories
+  UserCategory.notes.push(UserNote);
+  await UserCategory.save({ validateBeforeSave: false });
+
+  // getting user for respose
+  const user = await User.findById(req.user.id);
+  ErrorHandlerFunction(
+    user,
+    next,
+    400,
+    "A user id is required or user is not logged in"
+  );
+  // user.notes.push(UserNote);
+  // await user.save({ validateBeforeSave: false });
+  ///////////////////////////
+  // sending response
+  await sendSucessResponse(res, user, token);
+});
 
 export const updateNote = catchAsync(async (req, res, next) => {
   const { title, note, token } = req.body;
@@ -29,41 +79,6 @@ export const updateNote = catchAsync(async (req, res, next) => {
     "A user id is required or user is not logged in"
   );
 
-  // sending response
-  await sendSucessResponse(res, user, token);
-});
-
-export const createNote = catchAsync(async (req, res, next) => {
-  // validate fields
-  const { title, note, token } = req.body;
-  if (
-    !title ||
-    !note ||
-    title.trim().length === 0 ||
-    note.trim().length === 0
-  ) {
-    return next(new AppError(400, "enter all fields"));
-  }
-
-  const newNote = {
-    title,
-    note,
-  };
-  // create note
-  const UserNote = await Note.create(newNote);
-  // await UserNote.save({ validateBeforeSave: false });
-  // geting user functionality
-  const user = await User.findById(req.user.id);
-  ErrorHandlerFunction(
-    user,
-    next,
-    400,
-    "A user id is required or user is not logged in"
-  );
-
-  user.notes.push(UserNote);
-  await user.save({ validateBeforeSave: false });
-  ///////////////////////////
   // sending response
   await sendSucessResponse(res, user, token);
 });

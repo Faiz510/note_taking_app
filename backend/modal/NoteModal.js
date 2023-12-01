@@ -15,6 +15,10 @@ const NoteSchema = new mongoose.Schema(
       required: [true, "A note is required"],
     },
 
+    category: {
+      type: String,
+    },
+
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
