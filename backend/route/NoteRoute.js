@@ -1,6 +1,6 @@
 import express from "express";
 import {
-  AllNotes,
+  AllNotesByCat,
   createNote,
   deleteNote,
   noteById,
@@ -10,7 +10,7 @@ import { protect } from "../controller/authController.js";
 
 const router = express.Router();
 
-router.route("/").post(protect, createNote).get(protect, AllNotes);
+router.route("/").post(protect, createNote).get(protect, AllNotesByCat);
 
 router
   .route("/:id")

@@ -19,6 +19,13 @@ const CategorySchema = new mongoose.Schema({
   },
 });
 
+CategorySchema.pre(/^find/, function () {
+  this.populate({
+    path: "notes",
+    select: "title",
+  });
+});
+
 const Category = mongoose.model("Category", CategorySchema);
 
 export default Category;

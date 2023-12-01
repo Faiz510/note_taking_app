@@ -48,11 +48,70 @@ export const createNote = catchAsync(async (req, res, next) => {
     400,
     "A user id is required or user is not logged in"
   );
-  // user.notes.push(UserNote);
-  // await user.save({ validateBeforeSave: false });
   ///////////////////////////
   // sending response
   await sendSucessResponse(res, user, token);
+});
+
+export const noteById = catchAsync(async (req, res, next) => {
+  const notes = await Note.findById(req.params.id);
+
+  if (!notes) return next(new AppError(400, "note not found with this id"));
+
+  res.status(200).json({
+    status: "sucess",
+    notes,
+  });
+});
+
+export const AllNotesByCat = catchAsync(async (req, res, next) => {
+  const user = await User.findById(req.user.id);
+
+  const category = await Category.findById(req.body.catId);
+
+  const notes = category.notes;
+
+  if (!user || !notes) {
+    return next(new AppError(200, "user not logged in or notes nof found"));
+  }
+  res.status(200).json({
+    status: "sucess",
+    notesNum: notes.length,
+    notes,
+  });
+});
+
+export const deleteNote = catchAsync(async (req, res, next) => {
+  const { token } = req.body;
+
+  // notes del from notes modal
+  const notes = await Note.findByIdAndDelete(req.params.id);
+
+  ErrorHandlerFunction(notes, next, 400, "can not found note with this id");
+
+  // also remove from notes array
+  // const userUpdate = await User.findByIdAndUpdate(
+  //   req.user._id,
+  //   { $pull: { notes: req.params.id } },
+  //   { new: true }
+  // );
+
+  // user
+  const user = await User.findById(req.user.id);
+
+  ErrorHandlerFunction(
+    user,
+    next,
+    400,
+    "A user id is required or user is not logged in"
+  );
+
+  res.status(200).json({
+    status: "sucess",
+    token,
+    // user: userUpdate,
+    user,
+  });
 });
 
 export const updateNote = catchAsync(async (req, res, next) => {
@@ -81,59 +140,4 @@ export const updateNote = catchAsync(async (req, res, next) => {
 
   // sending response
   await sendSucessResponse(res, user, token);
-});
-
-export const AllNotes = catchAsync(async (req, res, next) => {
-  const user = await User.findById(req.user.id);
-
-  const notes = await user.notes;
-
-  if (!user || !notes) {
-    return next(new AppError(200, "user not logged in or notes nof found"));
-  }
-  res.status(200).json({
-    status: "sucess",
-    notesNum: notes.length,
-    notes,
-  });
-});
-
-export const noteById = catchAsync(async (req, res, next) => {
-  const notes = await Note.findById(req.params.id);
-
-  if (!notes) return next(new AppError(400, "note not found with this id"));
-
-  res.status(200).json({
-    status: "sucess",
-    notes,
-  });
-});
-
-export const deleteNote = catchAsync(async (req, res, next) => {
-  const { token } = req.body;
-  // user
-  const user = await User.findById(req.user.id);
-  ErrorHandlerFunction(
-    user,
-    next,
-    400,
-    "A user id is required or user is not logged in"
-  );
-
-  // notes del from notes modal
-  const notes = await Note.findByIdAndDelete(req.params.id);
-  ErrorHandlerFunction(notes, next, 400, "can not found note with this id");
-
-  // also remove from notes array
-  const userUpdate = await User.findByIdAndUpdate(
-    req.user._id,
-    { $pull: { notes: req.params.id } },
-    { new: true }
-  );
-
-  res.status(200).json({
-    status: "sucess",
-    token,
-    user: userUpdate,
-  });
 });
