@@ -30,6 +30,13 @@ const NoteSchema = new mongoose.Schema(
   }
 );
 
+// NoteSchema.pre(/^find/, function () {
+//   this.populate({
+//     path: "category",
+//     select: "categoryName",
+//   });
+// });
+
 const Note = mongoose.model("Note", NoteSchema);
 
 export default Note;

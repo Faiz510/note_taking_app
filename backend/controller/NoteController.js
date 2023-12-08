@@ -22,6 +22,7 @@ export const createNote = catchAsync(async (req, res, next) => {
   const newNote = {
     title,
     note,
+    category,
   };
   /////////////////////
   // create note
@@ -54,7 +55,10 @@ export const createNote = catchAsync(async (req, res, next) => {
 });
 
 export const noteById = catchAsync(async (req, res, next) => {
-  const notes = await Note.findById(req.params.id);
+  const notes = await Note.findById(req.params.id).populate({
+    path: "category",
+    select: "categoryName",
+  });
 
   if (!notes) return next(new AppError(400, "note not found with this id"));
 
@@ -115,11 +119,12 @@ export const deleteNote = catchAsync(async (req, res, next) => {
 });
 
 export const updateNote = catchAsync(async (req, res, next) => {
-  const { title, note, token } = req.body;
+  const { title, note, category, token } = req.body;
 
   const newBody = {
     title,
     note,
+    category,
   };
 
   const notes = await Note.findByIdAndUpdate(req.params.id, newBody, {

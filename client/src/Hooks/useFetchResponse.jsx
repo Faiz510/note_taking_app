@@ -19,6 +19,7 @@ const useFetchResponse = (type, url, token) => {
         const { data } = res;
         setResponse(data);
         setFetchLoading(false);
+        console.log(response);
       } catch (error) {
         setFetchError(error.response.data.message);
         setFetchLoading(false);

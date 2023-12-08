@@ -22,7 +22,10 @@ const Home = () => {
           <SidebarProject showAddNotes={setShowAddNotes} />
 
           {showAddNotes ? (
-            <CreateNoteSections showAddNotes={addNotesHandler} />
+            <CreateNoteSections
+              showAddNotes={addNotesHandler}
+              setShowAddNotes={setShowAddNotes}
+            />
           ) : (
             <AddProjectSection showAddNotes={addNotesHandler} />
           )}

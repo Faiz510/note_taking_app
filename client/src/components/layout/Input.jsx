@@ -4,19 +4,32 @@ import { useSelector, useDispatch } from "react-redux";
 import { sessionSucess } from "../../store/UserSlice";
 import ErrorBox from "./ErrorBox";
 import { useNavigate } from "react-router-dom";
+import SelectCatOpt from "./SelectCatOpt";
 
-const Input = ({ showAddNotes }) => {
+const Input = ({ showAddNotes, setShowAddNotes }) => {
   const [noteData, setNoteData] = useState({});
   const [formError, setFormError] = useState("");
+  const [selectCat, setSelectCat] = useState("");
   const navigate = useNavigate();
-  /////////////////
   const dispatch = useDispatch();
   const { token } = useSelector((state) => state.user?.user?.currentUser);
+  /////////////////
 
-  const onNoteVal = (e) => {
-    setNoteData({ ...noteData, [e.target.id]: e.target.value, token });
-  };
+  ///////////////////////
+  // on select handler select value from categroy optoins
+  const onSelectHandler = (e) => setSelectCat(e.target.value);
+
+  // form values form note form
+  const onNoteVal = (e) =>
+    setNoteData((prevNoteData) => ({
+      ...prevNoteData,
+      [e.target.id]: e.target.value,
+      token,
+      category: selectCat,
+    }));
+
   ////////////////////
+  // submit note form
   const onSubmitHandler = async (e) => {
     e.preventDefault();
 
@@ -34,11 +47,14 @@ const Input = ({ showAddNotes }) => {
       // console.log(data);
       dispatch(sessionSucess(data));
       navigate("/");
+
+      setShowAddNotes(false);
     } catch (error) {
       // console.log(error);
       setFormError(error.response.data.message);
     }
   };
+
   return (
     <form
       className="flex justify-center items-center h-64 flex-col gap-4"
@@ -59,6 +75,8 @@ const Input = ({ showAddNotes }) => {
         id="note"
         onChange={onNoteVal}
       ></textarea>
+
+      <SelectCatOpt onClickHandler={onSelectHandler} />
 
       <div className="flex gap-2">
         <button type="button" className="cursor-pointer" onClick={showAddNotes}>

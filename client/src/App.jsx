@@ -8,6 +8,7 @@ import Signup from "./components/Pages/Signup";
 import Profile from "./components/Pages/Profile";
 import PrivateLayout from "./components/layout/PrivateLayout";
 import Note from "./components/Pages/Note";
+import Category from "./components/Pages/Category";
 
 const App = () => {
   return (
@@ -20,6 +21,7 @@ const App = () => {
           <Route path="/signin" element={<Sigin />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/signout" element={<Signout />} />
+          <Route path="/category" element={<Category />} />
           <Route element={<PrivateLayout />}>
             <Route path="/profile" element={<Profile />} />
             <Route path="note/:id" element={<Note />} />

@@ -6,6 +6,7 @@ import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import { sessionSucess } from "../../store/UserSlice";
 import useFetchResponse from "../../Hooks/useFetchResponse";
+import SelectCatOpt from "../layout/SelectCatOpt";
 
 const Note = () => {
   const [isEditing, setIsEditing] = useState(false);
@@ -13,6 +14,7 @@ const Note = () => {
   const [updateData, setUpdateData] = useState({});
   const [loading, setLoading] = useState(false);
   const [dataError, setErrorData] = useState("");
+  const [selectOpt, setSelectOpt] = useState("");
   const params = useParams();
   const { id } = params;
   const navigate = useNavigate();
@@ -52,10 +54,15 @@ const Note = () => {
     }
   };
 
+  const onSelectCatHandler = (e) => setSelectOpt(e.target.value);
   // update function
-  const onUpdateVal = (e) => {
-    setUpdateData({ ...updateData, [e.target.id]: e.target.value, token });
-  };
+  const onUpdateVal = (e) =>
+    setUpdateData((preData) => ({
+      ...preData,
+      [e.target.id]: e.target.value,
+      token,
+      category: selectOpt,
+    }));
 
   const onUpdateNoteHandler = async () => {
     setIsEditing(() => !isEditing);
@@ -75,6 +82,7 @@ const Note = () => {
 
       const { data } = res;
       dispatch(sessionSucess(data));
+      console.log(data);
     } catch (error) {
       setErrorData(error.response.data.message);
     }
@@ -128,6 +136,28 @@ const Note = () => {
           >
             Delete Note
           </button>
+        </div>
+
+        {/* <SelectCatOpt
+          onClickHandler={onSelectCatHandler}
+          readOnly={isEditing ? false : true}
+        /> */}
+        <div className="flex gap-2">
+          <select id="cat" onChange={onUpdateVal}>
+            {user?.categories?.map((cat) => (
+              <option key={cat._id} value={cat._id}>
+                {cat.categoryName}
+              </option>
+            ))}
+            {/* <option >Create Category</option> */}
+          </select>
+
+          <span
+            onClick={() => navigate("/category")}
+            className="bg-slate-300  px-2 text-white text-2xl cursor-pointer font-bold"
+          >
+            +
+          </span>
         </div>
 
         <ErrorBox error={dataError} />
