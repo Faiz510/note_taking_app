@@ -48,7 +48,7 @@ const useFetchResponse = (type, url, token) => {
     }
   }, [type, url, token]);
 
-  return { response, fetchLoading, fetchError };
+  return { response, fetchLoading, setFetchLoading, fetchError };
 };
 
 export default useFetchResponse;

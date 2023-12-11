@@ -93,13 +93,6 @@ export const deleteNote = catchAsync(async (req, res, next) => {
 
   ErrorHandlerFunction(notes, next, 400, "can not found note with this id");
 
-  // also remove from notes array
-  // const userUpdate = await User.findByIdAndUpdate(
-  //   req.user._id,
-  //   { $pull: { notes: req.params.id } },
-  //   { new: true }
-  // );
-
   // user
   const user = await User.findById(req.user.id);
 
@@ -118,6 +111,8 @@ export const deleteNote = catchAsync(async (req, res, next) => {
   });
 });
 
+/////////////////////////////
+// update note
 export const updateNote = catchAsync(async (req, res, next) => {
   const { title, note, category, token } = req.body;
 
@@ -127,15 +122,29 @@ export const updateNote = catchAsync(async (req, res, next) => {
     category,
   };
 
+  // get previous Cat
+  const UserNote = await Note.findById(req.params.id);
+  const preCategoryId = UserNote.category._id;
+  // get prvious categro and remove form note from prevouse categroy
+  const preCategory = await Category.findByIdAndUpdate(
+    preCategoryId,
+    { $pull: { notes: req.params.id } },
+    { new: true }
+  );
+
   const notes = await Note.findByIdAndUpdate(req.params.id, newBody, {
     new: true,
     runValidators: true,
   });
-
   ErrorHandlerFunction(notes, next, 400, "note can not found with this id");
 
-  const user = await User.findById(req.user.id);
+  // add note to existing category
+  const newCategory = await Category.findByIdAndUpdate(category, {
+    $addToSet: { notes: notes },
+  });
 
+  // getting user in response
+  const user = await User.findById(req.user.id);
   ErrorHandlerFunction(
     user,
     next,

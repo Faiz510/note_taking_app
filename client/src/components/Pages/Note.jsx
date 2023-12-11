@@ -15,6 +15,7 @@ const Note = () => {
   const [loading, setLoading] = useState(false);
   const [dataError, setErrorData] = useState("");
   const [selectOpt, setSelectOpt] = useState("");
+  const [defValOpt, setDefValOpt] = useState("");
   const params = useParams();
   const { id } = params;
   const navigate = useNavigate();
@@ -29,6 +30,12 @@ const Note = () => {
     `http://localhost:3000/api/v1/note/${id}`,
     token
   );
+
+  useEffect(() => {
+    if (response) {
+      setDefValOpt(response?.notes?.category?.categoryName);
+    }
+  }, [response]);
 
   const onDeleteNoteHandler = async () => {
     try {
@@ -54,15 +61,17 @@ const Note = () => {
     }
   };
 
-  const onSelectCatHandler = (e) => setSelectOpt(e.target.value);
+  // const onSelectCatHandler = (e) => setSelectOpt(e.target.value);
   // update function
   const onUpdateVal = (e) =>
     setUpdateData((preData) => ({
       ...preData,
       [e.target.id]: e.target.value,
       token,
-      category: selectOpt,
+      // category: selectOpt,
     }));
+
+  // console.log(updateData);
 
   const onUpdateNoteHandler = async () => {
     setIsEditing(() => !isEditing);
@@ -82,11 +91,14 @@ const Note = () => {
 
       const { data } = res;
       dispatch(sessionSucess(data));
+      navigate("/");
       console.log(data);
     } catch (error) {
       setErrorData(error.response.data.message);
     }
   };
+
+  // console.log(response?.notes?.category?.categoryName);
 
   return (
     <FormSectionLayout label={"Note Page"}>
@@ -143,12 +155,16 @@ const Note = () => {
           readOnly={isEditing ? false : true}
         /> */}
         <div className="flex gap-2">
-          <select id="cat" onChange={onUpdateVal}>
-            {user?.categories?.map((cat) => (
-              <option key={cat._id} value={cat._id}>
-                {cat.categoryName}
-              </option>
-            ))}
+          <select id="category" onChange={onUpdateVal}>
+            {!isEditing ? (
+              <option value={defValOpt}> {defValOpt} </option>
+            ) : (
+              user?.categories?.map((cat) => (
+                <option key={cat._id} value={cat._id}>
+                  {cat.categoryName}
+                </option>
+              ))
+            )}
             {/* <option >Create Category</option> */}
           </select>
 

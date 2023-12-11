@@ -9,30 +9,23 @@ import SelectCatOpt from "./SelectCatOpt";
 const Input = ({ showAddNotes, setShowAddNotes }) => {
   const [noteData, setNoteData] = useState({});
   const [formError, setFormError] = useState("");
-  const [selectCat, setSelectCat] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { token } = useSelector((state) => state.user?.user?.currentUser);
   /////////////////
 
-  ///////////////////////
-  // on select handler select value from categroy optoins
-  const onSelectHandler = (e) => setSelectCat(e.target.value);
-
-  // form values form note form
+  // // form values form note form
   const onNoteVal = (e) =>
     setNoteData((prevNoteData) => ({
       ...prevNoteData,
       [e.target.id]: e.target.value,
       token,
-      category: selectCat,
     }));
 
   ////////////////////
   // submit note form
   const onSubmitHandler = async (e) => {
     e.preventDefault();
-
     try {
       const res = await axios.post(
         "http://localhost:3000/api/v1/note",
@@ -44,14 +37,15 @@ const Input = ({ showAddNotes, setShowAddNotes }) => {
         }
       );
       const { data } = res;
-      // console.log(data);
+      console.log(data);
       dispatch(sessionSucess(data));
       navigate("/");
 
       setShowAddNotes(false);
     } catch (error) {
-      // console.log(error);
+      console.log(error);
       setFormError(error.response.data.message);
+      // setFormError(error.response.data.message);
     }
   };
 
@@ -76,7 +70,7 @@ const Input = ({ showAddNotes, setShowAddNotes }) => {
         onChange={onNoteVal}
       ></textarea>
 
-      <SelectCatOpt onClickHandler={onSelectHandler} />
+      <SelectCatOpt onClickHandler={onNoteVal} />
 
       <div className="flex gap-2">
         <button type="button" className="cursor-pointer" onClick={showAddNotes}>
