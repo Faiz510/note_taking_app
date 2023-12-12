@@ -22,6 +22,8 @@ const Input = ({ showAddNotes, setShowAddNotes }) => {
       token,
     }));
 
+  console.log(noteData);
+
   ////////////////////
   // submit note form
   const onSubmitHandler = async (e) => {

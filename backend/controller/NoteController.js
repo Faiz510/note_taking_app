@@ -6,6 +6,7 @@ import sendSucessResponse from "../utilis/SendResponse.js";
 import ErrorHandlerFunction from "../utilis/ErrorHandlerFunction.js";
 import Category from "../modal/CategoryModal.js";
 
+///////////////////////////////
 export const createNote = catchAsync(async (req, res, next) => {
   // validate fields
   const { title, note, token, category } = req.body;
@@ -54,6 +55,7 @@ export const createNote = catchAsync(async (req, res, next) => {
   await sendSucessResponse(res, user, token);
 });
 
+/////////////////
 export const noteById = catchAsync(async (req, res, next) => {
   const notes = await Note.findById(req.params.id).populate({
     path: "category",
@@ -68,6 +70,7 @@ export const noteById = catchAsync(async (req, res, next) => {
   });
 });
 
+/////////////////////
 export const AllNotesByCat = catchAsync(async (req, res, next) => {
   const user = await User.findById(req.user.id);
 
@@ -85,6 +88,7 @@ export const AllNotesByCat = catchAsync(async (req, res, next) => {
   });
 });
 
+////////////////////
 export const deleteNote = catchAsync(async (req, res, next) => {
   const { token } = req.body;
 

@@ -6,22 +6,18 @@ import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import { sessionSucess } from "../../store/UserSlice";
 import useFetchResponse from "../../Hooks/useFetchResponse";
-import SelectCatOpt from "../layout/SelectCatOpt";
+import moment from "moment";
 
 const Note = () => {
   const [isEditing, setIsEditing] = useState(false);
-  const [NoteData, setNoteData] = useState({});
   const [updateData, setUpdateData] = useState({});
   const [loading, setLoading] = useState(false);
   const [dataError, setErrorData] = useState("");
-  const [selectOpt, setSelectOpt] = useState("");
   const [defValOpt, setDefValOpt] = useState("");
   const params = useParams();
   const { id } = params;
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
-  // console.log(response);
 
   const { user, token } = useSelector((state) => state.user?.user?.currentUser);
 
@@ -30,6 +26,11 @@ const Note = () => {
     `http://localhost:3000/api/v1/note/${id}`,
     token
   );
+
+  // date formatting
+  const dateString = response?.notes?.createdAt;
+  const formatedDate = moment(dateString).startOf("day").fromNow();
+  ///////////////////////
 
   useEffect(() => {
     if (response) {
@@ -61,7 +62,6 @@ const Note = () => {
     }
   };
 
-  // const onSelectCatHandler = (e) => setSelectOpt(e.target.value);
   // update function
   const onUpdateVal = (e) =>
     setUpdateData((preData) => ({
@@ -71,7 +71,7 @@ const Note = () => {
       // category: selectOpt,
     }));
 
-  // console.log(updateData);
+  // console.log(response.notes.createdAt);
 
   const onUpdateNoteHandler = async () => {
     setIsEditing(() => !isEditing);
@@ -98,14 +98,12 @@ const Note = () => {
     }
   };
 
-  // console.log(response?.notes?.category?.categoryName);
-
   return (
     <FormSectionLayout label={"Note Page"}>
       <form className="flex justify-center items-center h-64 flex-col gap-4 w-[80%] md:w-[90%]">
         <input
           type="text"
-          className="bg-slate-200 w-[80%] focus:outline-none rounded-md py-1 px-2"
+          className="bg-slate-200 w-[80%] focus:outline-none rounded-md py-1 px-2 "
           placeholder="Title"
           defaultValue={response?.notes?.title}
           id="title"
@@ -150,10 +148,7 @@ const Note = () => {
           </button>
         </div>
 
-        {/* <SelectCatOpt
-          onClickHandler={onSelectCatHandler}
-          readOnly={isEditing ? false : true}
-        /> */}
+        {/* select option Categroy  */}
         <div className="flex gap-2">
           <select id="category" onChange={onUpdateVal}>
             {!isEditing ? (
@@ -165,7 +160,6 @@ const Note = () => {
                 </option>
               ))
             )}
-            {/* <option >Create Category</option> */}
           </select>
 
           <span
@@ -176,6 +170,9 @@ const Note = () => {
           </span>
         </div>
 
+        <div>
+          <span>{formatedDate}</span>
+        </div>
         <ErrorBox error={dataError} />
       </form>
     </FormSectionLayout>

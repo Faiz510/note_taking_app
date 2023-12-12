@@ -1,13 +1,11 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ErrorBox from "./ErrorBox";
-import SelectCatOpt from "./SelectCatOpt";
 
 const SidebarProject = ({ showAddNotes }) => {
-  // const [NoteData, setNoteData] = useState([]);
-  const [loading, setLoading] = useState(false);
   const [dataError, setErrorData] = useState("");
+  const navigate = useNavigate();
 
   const { user } = useSelector((state) => state.user?.user?.currentUser);
 
@@ -35,6 +33,7 @@ const SidebarProject = ({ showAddNotes }) => {
           Add Notes
         </button>
 
+        {/* {!user?.categories?.length === 0 ? ( */}
         <select
           className="w-[50%] py-1 bg-slate-500 text-white focus:outline-none"
           onChange={onSelectHanlder}
@@ -49,6 +48,16 @@ const SidebarProject = ({ showAddNotes }) => {
             </option>
           ))}
         </select>
+        {/* ) 
+        : (
+          <button
+            className="w-[50%] py-1 bg-slate-500 text-white focus:outline-none"
+            onClick={() => navigate("/category")}
+          >
+            Add Cate
+          </button>
+        )
+        } */}
       </div>
 
       {/* getting notes title lisst from state  */}

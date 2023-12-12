@@ -40,6 +40,10 @@ const userSchema = new mongoose.Schema(
     // notes: [{ type: mongoose.Schema.Types.ObjectId, ref: "Note" }],
 
     categories: [{ type: mongoose.Schema.Types.ObjectId, ref: "Category" }],
+    photo: {
+      type: String,
+      default: "default.png",
+    },
   },
   {
     timestamps: true,
