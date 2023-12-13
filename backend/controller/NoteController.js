@@ -18,8 +18,7 @@ export const createNote = catchAsync(async (req, res, next) => {
   ) {
     return next(new AppError(400, "enter all fields"));
   }
-  if (!category || category.trim().length === 0)
-    return next(new AppError(400, "category not added"));
+  if (!category) return next(new AppError(400, "category not added"));
   const newNote = {
     title,
     note,

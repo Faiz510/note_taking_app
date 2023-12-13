@@ -7,11 +7,14 @@ import { useNavigate } from "react-router-dom";
 import SelectCatOpt from "./SelectCatOpt";
 
 const Input = ({ showAddNotes, setShowAddNotes }) => {
-  const [noteData, setNoteData] = useState({});
+  const { token, user } = useSelector((state) => state.user?.user?.currentUser);
+  const [noteData, setNoteData] = useState({
+    category: user?.categories[0] || "",
+  });
   const [formError, setFormError] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { token } = useSelector((state) => state.user?.user?.currentUser);
+
   /////////////////
 
   // // form values form note form
@@ -22,7 +25,7 @@ const Input = ({ showAddNotes, setShowAddNotes }) => {
       token,
     }));
 
-  console.log(noteData);
+  // console.log(noteData);
 
   ////////////////////
   // submit note form

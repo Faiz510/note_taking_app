@@ -9,18 +9,19 @@ import useFetchResponse from "../../Hooks/useFetchResponse";
 import moment from "moment";
 
 const Note = () => {
+  const { user, token } = useSelector((state) => state.user?.user?.currentUser);
+  const params = useParams();
+  const { id } = params;
+  ///////////////////
   const [isEditing, setIsEditing] = useState(false);
-  const [updateData, setUpdateData] = useState({});
   const [loading, setLoading] = useState(false);
   const [dataError, setErrorData] = useState("");
   const [defValOpt, setDefValOpt] = useState("");
-  const params = useParams();
-  const { id } = params;
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { user, token } = useSelector((state) => state.user?.user?.currentUser);
-
+  // fetching response function
   const { response } = useFetchResponse(
     "get",
     `http://localhost:3000/api/v1/note/${id}`,
@@ -29,12 +30,23 @@ const Note = () => {
 
   // date formatting
   const dateString = response?.notes?.createdAt;
-  const formatedDate = moment(dateString).startOf("day").fromNow();
+  const formattedDate = moment(dateString).fromNow();
+
   ///////////////////////
 
+  ///////////////////////////////
+  // update values state
+  const [updateData, setUpdateData] = useState({});
+
   useEffect(() => {
+    // getting response appi for default values
     if (response) {
       setDefValOpt(response?.notes?.category?.categoryName);
+      // setting defult value for updateData becuase now response has made
+      setUpdateData({
+        category: response?.notes?.category?._id || "",
+        token: token,
+      });
     }
   }, [response]);
 
@@ -62,14 +74,18 @@ const Note = () => {
     }
   };
 
-  // update function
-  const onUpdateVal = (e) =>
+  // // update function
+  const onUpdateVal = (e) => {
+    const { id, value } = e.target;
+
+    // Only update the state if the category value is changed
     setUpdateData((preData) => ({
       ...preData,
-      [e.target.id]: e.target.value,
+      [id]: value,
       token,
-      // category: selectOpt,
     }));
+  };
+  console.log(updateData);
 
   // console.log(response.notes.createdAt);
 
@@ -171,7 +187,7 @@ const Note = () => {
         </div>
 
         <div>
-          <span>{formatedDate}</span>
+          <span>{formattedDate ? formattedDate : ""}</span>
         </div>
         <ErrorBox error={dataError} />
       </form>

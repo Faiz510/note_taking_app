@@ -19,6 +19,7 @@ const Profile = () => {
   const [updateFormData, setUpdateFormData] = useState({
     username: user?.username || "",
     email: user?.email || "",
+    token: token,
   });
   const [formError, setFormError] = useState("");
   ////////////////////

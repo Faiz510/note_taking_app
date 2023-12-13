@@ -9,7 +9,12 @@ const SelectCatOpt = ({ onClickHandler, ...props }) => {
   return (
     <SignFormInputGroup label={"Select Category"}>
       <div className="flex gap-2">
-        <select onChange={onClickHandler} id="category" {...props}>
+        <select
+          onChange={onClickHandler}
+          id="category"
+          {...props}
+          defaultValue={user?.categories[0]}
+        >
           {user?.categories?.map((cat) => (
             <option key={cat._id} value={cat._id}>
               {cat.categoryName}
