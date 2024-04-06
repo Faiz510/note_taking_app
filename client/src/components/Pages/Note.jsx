@@ -7,6 +7,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { sessionSucess } from "../../store/UserSlice";
 import useFetchResponse from "../../Hooks/useFetchResponse";
 import moment from "moment";
+import ImageViewer from "../layout/ImageViewer";
+import { FaPlus } from "react-icons/fa6";
 
 const Note = () => {
   const { user, token } = useSelector((state) => state.user?.user?.currentUser);
@@ -17,6 +19,8 @@ const Note = () => {
   const [loading, setLoading] = useState(false);
   const [dataError, setErrorData] = useState("");
   const [defValOpt, setDefValOpt] = useState("");
+  const [openImg, setOpenImg] = useState(false);
+  const [openImgSrc, setOpenImgSrc] = useState("");
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -33,6 +37,9 @@ const Note = () => {
   const formattedDate = moment(dateString).fromNow();
 
   ///////////////////////
+  ////////////////////////////////
+  const baseurl = "http://localhost:3000/img/";
+  // const ImgUrl = `${baseurl}${user?.photo}`;
 
   ///////////////////////////////
   // update values state
@@ -49,6 +56,8 @@ const Note = () => {
       });
     }
   }, [response]);
+
+  console.log(response);
 
   const onDeleteNoteHandler = async () => {
     try {
@@ -85,7 +94,7 @@ const Note = () => {
       token,
     }));
   };
-  console.log(updateData);
+  // console.log(updateData);
 
   // console.log(response.notes.createdAt);
 
@@ -114,9 +123,16 @@ const Note = () => {
     }
   };
 
+  const onImage = (e) => {
+    // console.log(e.target.src);
+
+    setOpenImg(true);
+    setOpenImgSrc(e.target.src);
+  };
+
   return (
     <FormSectionLayout label={"Note Page"}>
-      <form className="flex justify-center items-center h-64 flex-col gap-4 w-[80%] md:w-[90%]">
+      <form className="flex justify-center items-center h-[30rem] flex-col gap-4 w-[80%] md:w-[90%] ">
         <input
           type="text"
           className="bg-slate-200 w-[80%] focus:outline-none rounded-md py-1 px-2 "
@@ -130,12 +146,32 @@ const Note = () => {
         <textarea
           rows="12"
           // placeholder="Descrioption"
-          className="bg-slate-200 w-[80%] h-28 focus:outline-none px-2 py-1"
+          className="bg-slate-200 w-[80%] h-28 focus:outline-none px-2 py-1 "
           id="note"
           defaultValue={response?.notes?.note}
           readOnly={isEditing ? false : true}
           onChange={onUpdateVal}
         ></textarea>
+
+        {/* <ImageGallery
+          items={response?.notes?.photos ? response?.notes?.photos : ""}
+        /> */}
+
+        <div className="flex gap-2 justify-center">
+          {response?.notes?.photos && response?.notes?.photos.length > 0 ? (
+            response?.notes?.photos.map((photo, i) => (
+              <img
+                className="w-16 h-16 object-cover cursor-pointer hover:scale-105"
+                key={i}
+                src={`${baseurl}/${photo}`}
+                alt={`Image ${i}`}
+                onClick={onImage}
+              />
+            ))
+          ) : (
+            <h3>No Images to show</h3>
+          )}
+        </div>
 
         <div className="flex justify-between px-4 items-center font-semibold gap-2 mt-2 flex-col md:flex-row w-[80%]">
           {isEditing ? (
@@ -182,7 +218,7 @@ const Note = () => {
             onClick={() => navigate("/category")}
             className="bg-slate-300  px-2 text-white text-2xl cursor-pointer font-bold"
           >
-            +
+            <FaPlus />
           </span>
         </div>
 
@@ -191,6 +227,8 @@ const Note = () => {
         </div>
         <ErrorBox error={dataError} />
       </form>
+
+      {openImg && <ImageViewer imgSrc={openImgSrc} OpenImg={setOpenImg} />}
     </FormSectionLayout>
   );
 };
