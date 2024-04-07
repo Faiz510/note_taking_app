@@ -26,7 +26,7 @@ const Signup = () => {
     try {
       setLoading(true);
       await axios.post(
-        "http://localhost:3000/api/v1/user/signup",
+        `${process.env.BASE_URL}/api/v1/user/signup`,
         signupformData
       );
 

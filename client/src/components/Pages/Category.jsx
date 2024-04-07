@@ -28,7 +28,7 @@ const Category = () => {
     e.preventDefault();
     try {
       const res = await axios.post(
-        `http://localhost:3000/api/v1/category`,
+        `${process.env.BASE_URL}/api/v1/category`,
         formData,
         {
           headers: {

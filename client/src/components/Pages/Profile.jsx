@@ -34,13 +34,13 @@ const Profile = () => {
   };
 
   ////////////////////////////////
-  const baseurl = "http://localhost:3000/img/";
+  const baseurl = `${process.env.BASE_URL}/img/`;
   const ImgUrl = `${baseurl}${user?.photo}`;
 
   // delte account handler
   const onDeleteAccountHandler = async () => {
     try {
-      await axios.delete("http://localhost:3000/api/v1/user/deleteMe", {
+      await axios.delete(`${process.env.BASE_URL}/api/v1/user/deleteMe `, {
         data: token,
         headers: {
           Authorization: `Bearer ${token}`,
@@ -79,7 +79,7 @@ const Profile = () => {
 
     try {
       const res = await axios.put(
-        "http://localhost:3000/api/v1/user/updateMe",
+        `${process.env.BASE_URL}/api/v1/user/updateMe`,
         formData,
         {
           headers: {

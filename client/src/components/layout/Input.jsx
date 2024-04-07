@@ -55,7 +55,7 @@ const Input = ({ showAddNotes, setShowAddNotes }) => {
 
     try {
       const res = await axios.post(
-        "http://localhost:3000/api/v1/note",
+        `${process.env.BASE_URL}/api/v1/note`,
         noteData,
         {
           headers: {

@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 const Navbar = () => {
   const currentUser = useSelector((state) => state.user.user.currentUser);
 
-  const baseurl = "http://localhost:3000/img/";
+  const baseurl = `${process.env.BASE_URL}/img/`;
   const ImgUrl = `${baseurl}${currentUser?.user?.photo}`;
 
   return (

@@ -28,7 +28,7 @@ const Note = () => {
   // fetching response function
   const { response } = useFetchResponse(
     "get",
-    `http://localhost:3000/api/v1/note/${id}`,
+    `${process.env.BASE_URL}/api/v1/note/${id}`,
     token
   );
 
@@ -38,7 +38,7 @@ const Note = () => {
 
   ///////////////////////
   ////////////////////////////////
-  const baseurl = "http://localhost:3000/img/";
+  const baseurl = `${process.env.BASE_URL}/img/`;
   // const ImgUrl = `${baseurl}${user?.photo}`;
 
   ///////////////////////////////
@@ -63,7 +63,7 @@ const Note = () => {
     try {
       setLoading(true);
       const res = await axios.delete(
-        `http://localhost:3000/api/v1/note/${id}`,
+        `${process.env.BASE_URL}/api/v1/note/${id}`,
         {
           data: { token },
           headers: {
@@ -105,7 +105,7 @@ const Note = () => {
 
     try {
       const res = await axios.put(
-        `http://localhost:3000/api/v1/note/${id}`,
+        `${process.env.BASE_URL}/api/v1/note/${id}`,
         updateData,
         {
           headers: {
